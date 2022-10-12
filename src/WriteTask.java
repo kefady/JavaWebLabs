@@ -15,17 +15,19 @@ public class WriteTask implements Runnable {
 
     @Override
     public void run() {
-        try {
-            RandomAccessFile randomAccessFile = new RandomAccessFile(resultFile, "rw");
-            while (!queue.isEmpty()) {
-                String line = queue.take();
-                randomAccessFile.seek(resultFile.length());
-                randomAccessFile.writeBytes(line);
-                System.out.println(Thread.currentThread().getName() + " -> " + new Date() + ": written new line to file " + resultFile.getPath());
+        synchronized (resultFile) {
+            try {
+                RandomAccessFile randomAccessFile = new RandomAccessFile(resultFile, "rw");
+                while (!queue.isEmpty()) {
+                    String line = queue.take();
+                    randomAccessFile.seek(resultFile.length());
+                    randomAccessFile.writeBytes(line);
+                    System.out.println(Thread.currentThread().getName() + " -> " + new Date() + ": written new line to file " + resultFile.getPath());
+                }
+                randomAccessFile.close();
+            } catch (InterruptedException | IOException exception) {
+                throw new RuntimeException(exception);
             }
-            randomAccessFile.close();
-        } catch (InterruptedException | IOException exception) {
-            throw new RuntimeException(exception);
         }
     }
 }

@@ -1,6 +1,6 @@
 E:\JavaWebLabs\Lab1Data\Dir1\File1_1.txt -> On the weekends we all play board games together. 
 E:\JavaWebLabs\Lab1Data\File0.txt -> I play outside. I like to play. 
-E:\JavaWebLabs\Lab1Data\Dir3\Dir3_1\File3_1_2.txt -> Female elephants support each other and protect and care for calves as a group and the grandmothers play an important role.  
 E:\JavaWebLabs\Lab1Data\Dir2\File2_2.txt -> The house has a garden. John and Sarah play in the garden. 
+E:\JavaWebLabs\Lab1Data\Dir3\Dir3_1\File3_1_2.txt -> Female elephants support each other and protect and care for calves as a group and the grandmothers play an important role.  
 E:\JavaWebLabs\Lab1Data\Dir2\File2_2.txt -> They have a dog. John and Sarah like to play with the dog. 
 E:\JavaWebLabs\Lab1Data\Dir1\File1_2.txt -> On the weekend, we play football together.
