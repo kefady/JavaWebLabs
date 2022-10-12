@@ -1,6 +1,5 @@
 import java.io.*;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Scanner;
 import java.util.concurrent.*;
@@ -14,36 +13,35 @@ public class Main {
 
         File resultFile = new File(directory + "\\Result.txt");
         try {
-            resultFile.delete();
-            resultFile.createNewFile();
+            if (!resultFile.exists()) {
+                resultFile.createNewFile();
+            } else {
+                resultFile.delete();
+                resultFile.createNewFile();
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
         ExecutorService pool = Executors.newCachedThreadPool();
-        SearchTask counterMath = new SearchTask(new File(directory), keyword);
-        Future<ArrayList<String>> task = pool.submit(counterMath);
+        BlockingQueue<String> queue = new ArrayBlockingQueue<>(10);
+        SearchTask searchTask = new SearchTask(queue, new File(directory), keyword, pool);
+        System.out.println("\nSearch started.");
+        Future<Integer> task = pool.submit(searchTask);
+        WriteTask writeTask = new WriteTask(queue, resultFile, task);
+        pool.submit(writeTask);
 
         try {
-            RandomAccessFile resultFileWriter = new RandomAccessFile(resultFile, "rw");
-            ArrayList<String> result = task.get();
-            if (result.isEmpty()) {
-                resultFileWriter.writeBytes("Not found a match.");
-            } else {
-                for (String line : result) {
-                    resultFileWriter.seek(resultFileWriter.length());
-                    resultFileWriter.writeBytes(line + "\n");
-                }
-            }
-        } catch (IOException | ExecutionException | InterruptedException e) {
+            System.out.println("\nSearch completed. Found " + task.get() + " matches.");
+        } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
 
         pool.shutdown();
 
         try {
-            System.out.println("\nRead file " + resultFile.getPath() + ":");
-            System.out.println(new String(Files.readAllBytes(resultFile.toPath())));
+            System.out.println("Read file " + resultFile.getPath() + ":");
+            System.out.print(new String(Files.readAllBytes(resultFile.toPath())));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -2,58 +2,61 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.FutureTask;
+import java.util.concurrent.*;
 
-public class SearchTask implements Callable<ArrayList<String>> {
+public class SearchTask implements Callable<Integer> {
+    private final BlockingQueue<String> queue;
+    private final ExecutorService pool;
     private final File directory;
     private final String keyword;
 
-    public SearchTask(File directory, String keyword) {
+    public SearchTask(BlockingQueue<String> queue, File directory, String keyword, ExecutorService pool) {
+        this.queue = queue;
         this.directory = directory;
         this.keyword = keyword;
+        this.pool = pool;
     }
 
-    public ArrayList<String> search(File file) {
-        ArrayList<String> matchesInCurrentFile = new ArrayList<>();
+    public Integer search(File file) {
+        int count = 0;
         try {
             Scanner scanner = new Scanner(new FileInputStream(file));
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 if (line.toLowerCase().contains(keyword.toLowerCase())) {
-                    matchesInCurrentFile.add(file.getName() + " -> " + line);
-                    System.out.println(new Date() + ": found a new match in the file " + file.getPath());
+                    count++;
+                    queue.put(file.getPath() + " -> " + line + "\n");
+                    System.out.println(Thread.currentThread().getName() + " -> " + new Date() + ": found a new match in the file " + file.getPath());
                 }
             }
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
+        } catch (InterruptedException | IOException exception) {
+            exception.printStackTrace();
+
         }
-        return matchesInCurrentFile;
+        return count;
     }
 
     @Override
-    public ArrayList<String> call() {
-        ArrayList<String> matchesInAllFiles = new ArrayList<>();
+    public Integer call() {
+        int count = 0;
         try {
             File[] files = directory.listFiles();
-            List<Future<ArrayList<String>>> tasks = new ArrayList<>();
+            List<Future<Integer>> tasks = new ArrayList<>();
             for (File file : Objects.requireNonNull(files, "No files in directory " + directory.getPath())) {
                 if (file.isDirectory()) {
-                    SearchTask searchTask = new SearchTask(file, keyword);
-                    FutureTask<ArrayList<String>> task = new FutureTask<>(searchTask);
+                    SearchTask searchTask = new SearchTask(queue, file, keyword, pool);
+                    Future<Integer> task = pool.submit(searchTask);
                     tasks.add(task);
-                    new Thread(task).start();
-                } else if (file.isFile()) {
-                    matchesInAllFiles.addAll(search(file));
+                } else if (file.isFile() && !file.getName().equals("Result.txt")) {
+                    count += search(file);
+                    System.out.println(Thread.currentThread().getName() + " -> " + new Date() + ": put a new file in list " + file.getPath());
                 }
             }
-            for (Future<ArrayList<String>> task : tasks)
-                matchesInAllFiles.addAll(task.get());
+            for (Future<Integer> task : tasks)
+                count += task.get();
         } catch (ExecutionException | InterruptedException exception) {
             exception.printStackTrace();
         }
-        return matchesInAllFiles;
+        return count;
     }
 }
