@@ -25,26 +25,26 @@ public class Main {
 
         ExecutorService pool = Executors.newCachedThreadPool();
         BlockingQueue<String> queue = new ArrayBlockingQueue<>(10);
-        SearchTask searchTask = new SearchTask(queue, new File(directory), keyword, pool);
+        SearchTask searchTask = new SearchTask(queue, new File(directory), resultFile, keyword, pool);
         System.out.println("\nSearch started.");
-        Future<Integer> task = pool.submit(searchTask);
-        WriteTask writeTask = new WriteTask(queue, resultFile, task);
-        pool.submit(writeTask);
+        Future<Integer> futureSearchTask = pool.submit(searchTask);
 
         try {
-            System.out.println("\nSearch completed. Found " + task.get() + " matches.");
+            System.out.println("\nSearch completed. Found " + futureSearchTask.get() + " matches.");
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
 
-        pool.shutdown();
-
         try {
-            System.out.println("Read file " + resultFile.getPath() + ":");
-            System.out.print(new String(Files.readAllBytes(resultFile.toPath())));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            if (futureSearchTask.get() > 0) {
+                System.out.println("Read file " + resultFile.getPath() + ":");
+                System.out.print(new String(Files.readAllBytes(resultFile.toPath())));
+            } else resultFile.delete();
+        } catch (IOException | ExecutionException | InterruptedException exception) {
+            throw new RuntimeException(exception);
         }
+
+        pool.shutdown();
     }
 
     private static String inputDirectory(Scanner scanner) {

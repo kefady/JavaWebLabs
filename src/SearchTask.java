@@ -8,11 +8,13 @@ public class SearchTask implements Callable<Integer> {
     private final BlockingQueue<String> queue;
     private final ExecutorService pool;
     private final File directory;
+    private final File resultFile;
     private final String keyword;
 
-    public SearchTask(BlockingQueue<String> queue, File directory, String keyword, ExecutorService pool) {
+    public SearchTask(BlockingQueue<String> queue, File directory, File resultFile, String keyword, ExecutorService pool) {
         this.queue = queue;
         this.directory = directory;
+        this.resultFile = resultFile;
         this.keyword = keyword;
         this.pool = pool;
     }
@@ -26,6 +28,8 @@ public class SearchTask implements Callable<Integer> {
                 if (line.toLowerCase().contains(keyword.toLowerCase())) {
                     count++;
                     queue.put(file.getPath() + " -> " + line + "\n");
+                    WriteTask writeTask = new WriteTask(queue, resultFile);
+                    pool.submit(writeTask);
                     System.out.println(Thread.currentThread().getName() + " -> " + new Date() + ": found a new match in the file " + file.getPath());
                 }
             }
@@ -44,7 +48,7 @@ public class SearchTask implements Callable<Integer> {
             List<Future<Integer>> tasks = new ArrayList<>();
             for (File file : Objects.requireNonNull(files, "No files in directory " + directory.getPath())) {
                 if (file.isDirectory()) {
-                    SearchTask searchTask = new SearchTask(queue, file, keyword, pool);
+                    SearchTask searchTask = new SearchTask(queue, file, resultFile, keyword, pool);
                     Future<Integer> task = pool.submit(searchTask);
                     tasks.add(task);
                 } else if (file.isFile() && !file.getName().equals("Result.txt")) {
