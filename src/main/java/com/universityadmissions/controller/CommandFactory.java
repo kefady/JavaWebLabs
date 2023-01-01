@@ -1,6 +1,5 @@
 package com.universityadmissions.controller;
 
-import com.universityadmissions.dao.mysql.MysqlDaoFactory;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.logging.Level;
