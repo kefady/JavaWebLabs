@@ -9,15 +9,16 @@ import com.universityadmissions.util.HashPassword;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class RegistrationCommand implements Command {
+    private static final Logger logger = Logger.getLogger(RegistrationCommand.class);
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) {
         try {
@@ -60,14 +61,16 @@ public class RegistrationCommand implements Command {
 
             if (errors.isEmpty()) {
                 response.sendRedirect("login");
+                logger.info("User '" + request.getSession().getAttribute("username") + "' is successfully registered.");
             } else {
-                for(HashMap.Entry<String, String> error : errors.entrySet()) {
+                for (HashMap.Entry<String, String> error : errors.entrySet()) {
                     request.setAttribute(error.getKey(), error.getValue());
                 }
                 request.getRequestDispatcher("registration").forward(request, response);
+                logger.warn("Failed to registration user. Wrong data.");
             }
         } catch (ServiceException | IOException | ServletException e) {
-            Logger.getLogger(RegistrationCommand.class.getName()).log(Level.WARNING, "Failed to registration user.", e);
+            logger.error("Failed to registration user. UserService not work.", e);
         }
     }
 }

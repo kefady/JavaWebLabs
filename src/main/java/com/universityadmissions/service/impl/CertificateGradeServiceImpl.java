@@ -7,10 +7,12 @@ import com.universityadmissions.db.Databases;
 import com.universityadmissions.entity.CertificateGrade;
 import com.universityadmissions.service.CertificateGradeService;
 import com.universityadmissions.service.ServiceException;
+import org.apache.log4j.Logger;
 
 import java.util.List;
 
 public class CertificateGradeServiceImpl implements CertificateGradeService {
+    private static final Logger logger = Logger.getLogger(CertificateGradeServiceImpl.class);
     private static volatile CertificateGradeServiceImpl instance;
     private final CertificateGradeDao dao;
 
@@ -32,8 +34,13 @@ public class CertificateGradeServiceImpl implements CertificateGradeService {
     @Override
     public boolean addNewCertificateGrade(CertificateGrade certificateGrade) throws ServiceException {
         try {
-            return dao.create(certificateGrade);
+            boolean result = dao.create(certificateGrade);
+            if (result) {
+                logger.info("Added new certificate grade in database.");
+            }
+            return result;
         } catch (DaoException e) {
+            logger.error("Failed to create new certificate grade.", e);
             throw new ServiceException("Failed to create new certificate grade.", e);
         }
     }
@@ -43,6 +50,7 @@ public class CertificateGradeServiceImpl implements CertificateGradeService {
         try {
             return dao.findIdByExamNameIdAndUserId(userId, examNameId) != null;
         } catch (DaoException e) {
+            logger.error("Could not find certificate grade.", e);
             throw new ServiceException("Could not find certificate grade.", e);
         }
     }
@@ -52,6 +60,7 @@ public class CertificateGradeServiceImpl implements CertificateGradeService {
         try {
             return dao.findGradesByUserId(userId);
         } catch (DaoException e) {
+            logger.error("Failed to get list of certificate grades.", e);
             throw new ServiceException("Failed to get list of certificate grades.", e);
         }
     }

@@ -8,14 +8,15 @@ import com.universityadmissions.service.ServiceFactory;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class DeleteUserApplicationCommand implements Command {
+    private static final Logger logger = Logger.getLogger(DeleteUserApplicationCommand.class);
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) {
         ApplicationService applicationService = ServiceFactory.getApplicationService();
@@ -34,12 +35,15 @@ public class DeleteUserApplicationCommand implements Command {
                     List<Application> applications = applicationService.findAllApplicationsByUserId((Integer) request.getSession().getAttribute("userId"));
                     request.getSession().setAttribute("applications", applications);
                     request.getRequestDispatcher("profile").forward(request, response);
+                    logger.info("Application with id '" + applicationId + "' has been successfully deleted.");
+                } else {
+                    logger.warn("Failed to application with id '" + applicationId + "'.");
                 }
             } else {
                 response.sendRedirect("login");
             }
         } catch (IOException | ServiceException | ServletException e) {
-            Logger.getLogger(DeleteUserApplicationCommand.class.getName()).log(Level.WARNING, "Failed to delete user application.", e);
+            logger.error("Failed to delete user application.", e);
         }
     }
 }

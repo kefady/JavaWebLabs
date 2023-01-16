@@ -9,11 +9,11 @@ import com.universityadmissions.service.ServiceException;
 import com.universityadmissions.service.ServiceFactory;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 public class CreateExamCommand implements Command {
+    private static final Logger logger = Logger.getLogger(CreateExamCommand.class);
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) {
         try {
@@ -34,12 +34,14 @@ public class CreateExamCommand implements Command {
 
             if (!isExamCreated) {
                 request.setAttribute("CREATE_EXAM_ERROR", "Не вдалося створити екзамен. Спробуйте пізніше.");
+                logger.error("Error creating exam with exam name id: " + examNameId);
+            } else {
+                logger.info("Exam created with name: " + examName.getName());
             }
-
             ConsoleCommand consoleCommand = new ConsoleCommand();
             consoleCommand.execute(request, response);
         } catch (ServiceException e) {
-            Logger.getLogger(CreateExamCommand.class.getName()).log(Level.WARNING, "Failed to create new exam.", e);
+            logger.error("Error adding new exam: " + e);
         }
     }
 }

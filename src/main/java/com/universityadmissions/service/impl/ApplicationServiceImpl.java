@@ -8,11 +8,13 @@ import com.universityadmissions.entity.Application;
 import com.universityadmissions.service.ApplicationService;
 import com.universityadmissions.service.ServiceException;
 import com.universityadmissions.validator.ApplicationValidator;
+import org.apache.log4j.Logger;
 
 import java.util.List;
 import java.util.Map;
 
 public class ApplicationServiceImpl implements ApplicationService {
+    private static final Logger logger = Logger.getLogger(ApplicationServiceImpl.class);
     private static volatile ApplicationServiceImpl instance;
     private final ApplicationDao dao;
 
@@ -43,10 +45,13 @@ public class ApplicationServiceImpl implements ApplicationService {
                 return errors;
             }
         } catch (DaoException e) {
+            logger.error("Failed to add new application.", e);
             throw new ServiceException("Failed to add new application.", e);
         }
         if (!isApplicationCreate) {
             errors.put("APPLICATION_ERROR", "Не вдалося відправити заявку. Спробуйте пізніше.");
+        } else {
+            logger.info("Added new application in database.");
         }
         return errors;
     }
@@ -56,6 +61,7 @@ public class ApplicationServiceImpl implements ApplicationService {
         try {
             return dao.findAll();
         } catch (DaoException e) {
+            logger.error("Failed to get list of applications.", e);
             throw new ServiceException("Failed to get list of applications.", e);
         }
     }
@@ -65,6 +71,7 @@ public class ApplicationServiceImpl implements ApplicationService {
         try {
             return dao.findAllByUserId(userId);
         } catch (DaoException e) {
+            logger.error("Failed to get list of applications.", e);
             throw new ServiceException("Failed to get list of applications.", e);
         }
     }
@@ -77,6 +84,7 @@ public class ApplicationServiceImpl implements ApplicationService {
             applications.removeIf(Application::isAccepted);
             return applications;
         } catch (DaoException e) {
+            logger.error("Failed to get list of applications.", e);
             throw new ServiceException("Failed to get list of applications.", e);
         }
     }
@@ -86,6 +94,7 @@ public class ApplicationServiceImpl implements ApplicationService {
         try {
             return dao.findById(id);
         } catch (DaoException e) {
+            logger.error("Failed to find application by id.", e);
             throw new ServiceException("Failed to find application by id.", e);
         }
     }
@@ -95,6 +104,7 @@ public class ApplicationServiceImpl implements ApplicationService {
         try {
             return dao.findAllByUserId(userId).size();
         } catch (DaoException e) {
+            logger.error("Failed to get amount of user applications.", e);
             throw new ServiceException("Failed to get amount of user applications.", e);
         }
     }
@@ -104,6 +114,7 @@ public class ApplicationServiceImpl implements ApplicationService {
         try {
             return dao.delete(id);
         } catch (DaoException e) {
+            logger.error("Failed to delete application.", e);
             throw new ServiceException("Failed to delete application.", e);
         }
     }
@@ -113,6 +124,7 @@ public class ApplicationServiceImpl implements ApplicationService {
         try {
             return dao.setVerify(applicationId, verify);
         } catch (DaoException e) {
+            logger.error("Failed to set application verify.", e);
             throw new ServiceException("Failed to set application verify.", e);
         }
     }
@@ -122,6 +134,7 @@ public class ApplicationServiceImpl implements ApplicationService {
         try {
             dao.setAccept(applicationId, accept);
         } catch (DaoException e) {
+            logger.error("Failed to set application accept.", e);
             throw new ServiceException("Failed to set application accept.", e);
         }
     }
@@ -131,6 +144,7 @@ public class ApplicationServiceImpl implements ApplicationService {
         try {
             dao.addFinalGrade(applicationId, finalGrade);
         } catch (DaoException e) {
+            logger.error("Failed to add final grade to application.", e);
             throw new ServiceException("Failed to add final grade to application.", e);
         }
     }

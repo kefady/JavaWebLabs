@@ -10,13 +10,14 @@ import com.universityadmissions.service.ExamNameService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class ApplyCommand implements Command {
+    private static final Logger logger = Logger.getLogger(ApplyCommand.class);
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) {
         try {
@@ -33,13 +34,15 @@ public class ApplyCommand implements Command {
                     request.setAttribute("examNames", examNames);
                     request.getRequestDispatcher("apply").forward(request, response);
                 } else {
+                    logger.warn("User '" + request.getSession().getAttribute("username") + "' has already applied for department with id '" + departmentId + "'.");
                     response.sendRedirect("/admission/");
                 }
             } else {
+                logger.warn("Unauthorized user attempted to submit a apply form.");
                 response.sendRedirect("login");
             }
         } catch (NumberFormatException | ServiceException | IOException | ServletException e) {
-            Logger.getLogger(ApplyCommand.class.getName()).log(Level.WARNING, "Failed to open apply form.", e);
+            logger.error("Failed to open apply form.", e);
         }
     }
 }

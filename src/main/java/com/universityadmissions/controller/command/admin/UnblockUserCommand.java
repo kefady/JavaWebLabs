@@ -6,12 +6,13 @@ import com.universityadmissions.service.ServiceFactory;
 import com.universityadmissions.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.log4j.Logger;
 
 import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class UnblockUserCommand implements Command {
+    private static final Logger logger = Logger.getLogger(UnblockUserCommand.class);
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) {
         try {
@@ -20,12 +21,13 @@ public class UnblockUserCommand implements Command {
             if (Objects.equals(request.getSession().getAttribute("role"), "ADMIN")) {
                 int userId = Integer.parseInt(request.getParameter("userId"));
                 userService.setBlockStatus(userId, false);
+                logger.info("Admin unblocked user with ID: " + userId);
             }
 
             ConsoleCommand consoleCommand = new ConsoleCommand();
             consoleCommand.execute(request, response);
         } catch (ServiceException e) {
-            Logger.getLogger(UnblockUserCommand.class.getName()).log(Level.WARNING, "Failed to unblock user.", e);
+            logger.error("Error unblocking user: " + e);
         }
     }
 }

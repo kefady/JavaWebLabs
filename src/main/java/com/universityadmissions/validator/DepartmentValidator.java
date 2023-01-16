@@ -1,6 +1,7 @@
 package com.universityadmissions.validator;
 
 import com.universityadmissions.entity.Department;
+import org.apache.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,6 +9,7 @@ import java.util.regex.Pattern;
 
 public class DepartmentValidator {
     private static final String DEPARTMENT_NAME = "[а-яА-ЯіїєґІЇЄҐ\\s]+";
+    private static final Logger logger = Logger.getLogger(DepartmentValidator.class);
 
     private DepartmentValidator() {
 
@@ -27,6 +29,7 @@ public class DepartmentValidator {
         if (department.getFirstExam().getCoefficient() + department.getSecondExam().getCoefficient() + department.getThirdExam().getCoefficient() != 0.95) {
             errors.put("COEFFICIENT_ERROR", "Сума коефіцієнтів екзаменів має бути рівна 0.95");
         }
+        logger.info("Validation of department '" + department.getName() + "' is completed.");
         return errors;
     }
 }

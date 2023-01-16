@@ -5,15 +5,15 @@ import com.universityadmissions.service.ApplicationService;
 import com.universityadmissions.service.DepartmentService;
 import com.universityadmissions.service.ServiceException;
 import com.universityadmissions.service.ServiceFactory;
+import org.apache.log4j.Logger;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class DepartmentElection extends Thread {
+    private static final Logger logger = Logger.getLogger(DepartmentElection.class);
     private final int departmentId;
     private final int priority;
     private final CyclicBarrier cyclicBarrier;
@@ -46,10 +46,13 @@ public class DepartmentElection extends Thread {
                         applicationService.setAccept(applications.get(i).getId(), false);
                     }
                 }
+            } else {
+                logger.warn("No applications for department '" + departmentService.findDepartmentById(departmentId).getName() + "'.");
             }
             cyclicBarrier.await();
         } catch (ServiceException | InterruptedException | BrokenBarrierException e) {
-            Logger.getLogger(DepartmentElection.class.getName()).log(Level.WARNING, "Department election error", e);
+            logger.error("Election for department with id '" + departmentId + "' failed. Services not work.", e);
         }
+        logger.info("Election for department with id '" + departmentId + "' is finished.");
     }
 }

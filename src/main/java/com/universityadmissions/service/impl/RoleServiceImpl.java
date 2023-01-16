@@ -7,8 +7,10 @@ import com.universityadmissions.dao.RoleDao;
 import com.universityadmissions.entity.Role;
 import com.universityadmissions.service.RoleService;
 import com.universityadmissions.service.ServiceException;
+import org.apache.log4j.Logger;
 
 public class RoleServiceImpl implements RoleService {
+    private static final Logger logger = Logger.getLogger(RoleServiceImpl.class);
     private static volatile RoleServiceImpl instance;
     private final RoleDao dao;
 
@@ -32,6 +34,7 @@ public class RoleServiceImpl implements RoleService {
         try {
             return dao.findById(id);
         } catch (DaoException e) {
+            logger.error("Could not find role.", e);
             throw new ServiceException("Could not find role.", e);
         }
     }

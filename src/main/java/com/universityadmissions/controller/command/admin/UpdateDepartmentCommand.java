@@ -9,13 +9,14 @@ import com.universityadmissions.service.ServiceException;
 import com.universityadmissions.service.ServiceFactory;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class UpdateDepartmentCommand implements Command {
+    private static final Logger logger = Logger.getLogger(UpdateDepartmentCommand.class);
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) {
         try {
@@ -53,6 +54,10 @@ public class UpdateDepartmentCommand implements Command {
                 errors.put("THIRD_EXAM_ERROR", "Екзамен №3: невірний ID.");
             }
 
+            if (firstExam == null || secondExam == null || thirdExam == null) {
+                logger.error("Invalid exam id(s) provided while trying to update a department.");
+            }
+
             if (errors.isEmpty()) {
                 Department department = new Department();
                 department.setId(departmentId);
@@ -69,12 +74,13 @@ public class UpdateDepartmentCommand implements Command {
                 for (HashMap.Entry<String, String> error : errors.entrySet()) {
                     request.setAttribute(error.getKey(), error.getValue());
                 }
+                logger.error("Error occurred while trying to update a department: " + departmentName);
             }
 
             ConsoleCommand consoleCommand = new ConsoleCommand();
             consoleCommand.execute(request, response);
         } catch (ServiceException e) {
-            Logger.getLogger(UpdateDepartmentCommand.class.getName()).log(Level.WARNING, "Failed to update department.", e);
+            logger.error("An error occurred while trying to update a department: " + e);
         }
     }
 }

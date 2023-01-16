@@ -5,8 +5,10 @@ import com.universityadmissions.db.Databases;
 import com.universityadmissions.entity.ExamGrade;
 import com.universityadmissions.service.ExamGradeService;
 import com.universityadmissions.service.ServiceException;
+import org.apache.log4j.Logger;
 
 public class ExamGradeServiceImpl implements ExamGradeService {
+    private static final Logger logger = Logger.getLogger(ExamGradeServiceImpl.class);
     private static volatile ExamGradeServiceImpl instance;
     private final ExamGradeDao dao;
 
@@ -28,8 +30,13 @@ public class ExamGradeServiceImpl implements ExamGradeService {
     @Override
     public boolean addNewExamGrade(ExamGrade examGrade) throws ServiceException {
         try {
-            return dao.create(examGrade);
+            boolean result = dao.create(examGrade);
+            if (result) {
+                logger.info("Added new exam grade in database.");
+            }
+            return result;
         } catch (DaoException e) {
+            logger.error("Failed to create new exam grade.", e);
             throw new ServiceException("Failed to create new exam grade.", e);
         }
     }
@@ -39,6 +46,7 @@ public class ExamGradeServiceImpl implements ExamGradeService {
         try {
             return dao.findGradeByUserIdAndExamNameId(userId, examNameId) != null;
         } catch (DaoException e) {
+            logger.error("Could not find exam grade.", e);
             throw new ServiceException("Could not find exam grade.", e);
         }
     }
@@ -48,6 +56,7 @@ public class ExamGradeServiceImpl implements ExamGradeService {
         try {
             return dao.findGradeByUserIdAndExamNameId(userId, examNameId);
         } catch (DaoException e) {
+            logger.error("Could not find exam grade.", e);
             throw new ServiceException("Could not find exam grade.", e);
         }
     }

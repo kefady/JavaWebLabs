@@ -2,12 +2,12 @@ package com.universityadmissions.util;
 
 import com.universityadmissions.entity.Application;
 import com.universityadmissions.service.*;
+import org.apache.log4j.Logger;
 
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class FormFinalGrade extends Thread {
+    private static final Logger logger = Logger.getLogger(FormFinalGrade.class);
     private final int userId;
 
     public FormFinalGrade(int userId) {
@@ -47,10 +47,11 @@ public class FormFinalGrade extends Thread {
 
                     application.setFinalGrade((int) Math.round(finalGrade));
                     applicationService.addFinalGrade(application.getId(), application.getFinalGrade());
+                    logger.info("Formed final grade for application with id '" + application.getId() + "' of user '" + application.getUser().getUsername() + "'.");
                 }
             }
         } catch (ServiceException e) {
-            Logger.getLogger(FormFinalGrade.class.getName()).log(Level.WARNING, "Final grade form error.", e);
+            logger.error("Filed to form final grade for user with id '" + userId + "'. Services not work.", e);
         }
     }
 }

@@ -22,7 +22,7 @@ public class MysqlApplicationDao implements ApplicationDao {
     private static final String SQL_SELECT_BY_DEPARTMENT_ID_AND_PRIORITY = "SELECT * FROM application WHERE department_id=? AND priority=?";
     private static final String SQL_SELECT_ALL = "SELECT * FROM application";
 
-    private static volatile MysqlApplicationDao instance = null;
+    private static volatile MysqlApplicationDao instance;
     private static final DaoFactory daoFactory;
 
     static {

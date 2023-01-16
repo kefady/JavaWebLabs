@@ -9,13 +9,14 @@ import com.universityadmissions.service.ServiceException;
 import com.universityadmissions.service.ServiceFactory;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class CreateDepartmentCommand implements Command {
+    private static final Logger logger = Logger.getLogger(CreateDepartmentCommand.class);
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) {
         try {
@@ -37,19 +38,22 @@ public class CreateDepartmentCommand implements Command {
                 secondExam = examService.findExamById(departmentSecondExamId);
                 thirdExam = examService.findExamById(departmentThirdExamId);
             } catch (ServiceException e) {
-                Logger.getLogger(CreateDepartmentCommand.class.getName()).log(Level.WARNING, "Failed to find exam.", e);
+                logger.error("Error creating department: " + e);
             }
 
             Map<String, String> errors = new HashMap<>();
 
             if (firstExam == null) {
                 errors.put("FIRST_EXAM_ERROR", "Екзамен №1: невірний ID.");
+                logger.error("Error finding exam with id: " + departmentFirstExamId);
             }
             if (secondExam == null) {
                 errors.put("SECOND_EXAM_ERROR", "Екзамен №2: невірний ID.");
+                logger.error("Error finding exam with id: " + departmentSecondExamId);
             }
             if (thirdExam == null) {
                 errors.put("THIRD_EXAM_ERROR", "Екзамен №3: невірний ID.");
+                logger.error("Error finding exam with id: " + departmentThirdExamId);
             }
 
             if (errors.isEmpty()) {
@@ -61,6 +65,7 @@ public class CreateDepartmentCommand implements Command {
                 department.setSecondExam(secondExam);
                 department.setThirdExam(thirdExam);
                 errors.putAll(departmentService.addNewDepartment(department));
+                logger.info("Department created with name: " + departmentName);
             }
 
             if (!errors.isEmpty()) {
@@ -72,7 +77,7 @@ public class CreateDepartmentCommand implements Command {
             ConsoleCommand consoleCommand = new ConsoleCommand();
             consoleCommand.execute(request, response);
         } catch (ServiceException e) {
-            Logger.getLogger(CreateDepartmentCommand.class.getName()).log(Level.WARNING, "Failed to create new department.", e);
+            logger.error("Error creating department: " + e);
         }
     }
 }

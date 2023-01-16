@@ -8,12 +8,14 @@ import com.universityadmissions.entity.Department;
 import com.universityadmissions.service.DepartmentService;
 import com.universityadmissions.service.ServiceException;
 import com.universityadmissions.validator.DepartmentValidator;
+import org.apache.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class DepartmentServiceImpl implements DepartmentService {
+    private static final Logger logger = Logger.getLogger(DepartmentServiceImpl.class);
     private static volatile DepartmentServiceImpl instance;
     private final DepartmentDao dao;
 
@@ -37,6 +39,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         try {
             return dao.findById(id);
         } catch (DaoException e) {
+            logger.error("Could not find department by id.", e);
             throw new ServiceException("Could not find department by id.", e);
         }
     }
@@ -46,6 +49,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         try {
             return dao.delete(id);
         } catch (DaoException e) {
+            logger.error("Failed to delete department.", e);
             throw new ServiceException("Failed to delete department.", e);
         }
     }
@@ -55,6 +59,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         try {
             return dao.findByName(name) != null;
         } catch (DaoException e) {
+            logger.error("Failed to find department.", e);
             throw new ServiceException("Failed to find department.", e);
         }
     }
@@ -75,10 +80,13 @@ public class DepartmentServiceImpl implements DepartmentService {
                 return errors;
             }
         } catch (DaoException e) {
+            logger.error("Failed to create department.", e);
             throw new ServiceException("Failed to create department.", e);
         }
-        if(!isDepartmentCreate) {
+        if (!isDepartmentCreate) {
             errors.put("CREATE_DEPARTMENT_FAILED", "Не вдалось створити факультет. Спробуйте пізніше.");
+        } else {
+            logger.info("Added new department in database.");
         }
         return errors;
     }
@@ -95,10 +103,13 @@ public class DepartmentServiceImpl implements DepartmentService {
                 return errors;
             }
         } catch (DaoException e) {
+            logger.error("Failed to create department.", e);
             throw new ServiceException("Failed to create department.", e);
         }
-        if(!isDepartmentUpdate) {
+        if (!isDepartmentUpdate) {
             errors.put("UPDATE_DEPARTMENT_FAILED", "Не вдалось обновити факультет. Спробуйте пізніше.");
+        } else {
+            logger.info("Department '" + department.getName() + "' successfully updated.");
         }
         return errors;
     }
@@ -108,6 +119,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         try {
             return dao.findAll();
         } catch (DaoException e) {
+            logger.error("Failed to get list of departments.", e);
             throw new ServiceException("Failed to get list of departments.", e);
         }
     }

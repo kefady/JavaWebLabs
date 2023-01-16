@@ -1,0 +1,89 @@
+2023-01-16 16:10:16 INFO  [http-nio-8080-exec-2]: Created connection pool.
+2023-01-16 16:10:17 INFO  [http-nio-8080-exec-2]: New user opened home page.
+2023-01-16 16:10:26 INFO  [http-nio-8080-exec-7]: New 'POST' request.
+2023-01-16 16:10:26 INFO  [http-nio-8080-exec-7]: Command 'login' is started.
+2023-01-16 16:10:26 WARN  [http-nio-8080-exec-7]: Failed to login user 'kefady'. Wrong data.
+2023-01-16 16:10:30 INFO  [http-nio-8080-exec-8]: New 'POST' request.
+2023-01-16 16:10:30 INFO  [http-nio-8080-exec-8]: Command 'login' is started.
+2023-01-16 16:10:30 INFO  [http-nio-8080-exec-8]: User 'kefady' is successfully authorized.
+2023-01-16 16:10:30 INFO  [http-nio-8080-exec-9]: User 'kefady' opened home page.
+2023-01-16 16:10:34 INFO  [http-nio-8080-exec-10]: New 'GET' request.
+2023-01-16 16:10:34 INFO  [http-nio-8080-exec-10]: Command 'profile' is started.
+2023-01-16 16:10:34 INFO  [http-nio-8080-exec-10]: User 'kefady' opened profile.
+2023-01-16 16:10:37 INFO  [http-nio-8080-exec-2]: User 'kefady' opened home page.
+2023-01-16 16:10:39 INFO  [http-nio-8080-exec-3]: New 'GET' request.
+2023-01-16 16:10:39 INFO  [http-nio-8080-exec-3]: Command 'apply' is started.
+2023-01-16 16:10:53 INFO  [http-nio-8080-exec-5]: New 'POST' request.
+2023-01-16 16:10:53 INFO  [http-nio-8080-exec-5]: Command 'send_application' is started.
+2023-01-16 16:10:53 INFO  [http-nio-8080-exec-5]: Validation of user 'kefady' application is completed.
+2023-01-16 16:10:53 INFO  [http-nio-8080-exec-5]: Added new application in database.
+2023-01-16 16:10:53 INFO  [http-nio-8080-exec-5]: User 'kefady' send new application.
+2023-01-16 16:10:53 INFO  [Thread-2]: Formed final grade for application with id '2' of user 'kefady'.
+2023-01-16 16:10:53 INFO  [http-nio-8080-exec-6]: User 'kefady' opened home page.
+2023-01-16 16:10:55 INFO  [http-nio-8080-exec-7]: New 'GET' request.
+2023-01-16 16:10:55 INFO  [http-nio-8080-exec-7]: Command 'profile' is started.
+2023-01-16 16:10:55 INFO  [http-nio-8080-exec-7]: User 'kefady' opened profile.
+2023-01-16 16:10:57 INFO  [http-nio-8080-exec-8]: New 'POST' request.
+2023-01-16 16:10:57 INFO  [http-nio-8080-exec-8]: Command 'delete_user_application' is started.
+2023-01-16 16:10:57 INFO  [http-nio-8080-exec-8]: Application with id '2' has been successfully deleted.
+2023-01-16 16:11:02 INFO  [http-nio-8080-exec-9]: New 'POST' request.
+2023-01-16 16:11:02 INFO  [http-nio-8080-exec-9]: Command 'logout' is started.
+2023-01-16 16:11:02 INFO  [http-nio-8080-exec-9]: User 'kefady' has been logout.
+2023-01-16 16:11:27 INFO  [http-nio-8080-exec-3]: New 'POST' request.
+2023-01-16 16:11:27 INFO  [http-nio-8080-exec-3]: Command 'registration' is started.
+2023-01-16 16:11:27 WARN  [http-nio-8080-exec-3]: Failed to registration user. Wrong data.
+2023-01-16 16:12:09 INFO  [http-nio-8080-exec-4]: New 'POST' request.
+2023-01-16 16:12:09 INFO  [http-nio-8080-exec-4]: Command 'registration' is started.
+2023-01-16 16:12:09 WARN  [http-nio-8080-exec-4]: Failed to registration user. Wrong data.
+2023-01-16 16:12:24 INFO  [http-nio-8080-exec-6]: New 'POST' request.
+2023-01-16 16:12:24 INFO  [http-nio-8080-exec-6]: Command 'registration' is started.
+2023-01-16 16:12:24 INFO  [http-nio-8080-exec-6]: Validation of user 'kefady2' is completed.
+2023-01-16 16:12:24 WARN  [http-nio-8080-exec-6]: Failed to registration user. Wrong data.
+2023-01-16 16:12:34 INFO  [http-nio-8080-exec-7]: New 'POST' request.
+2023-01-16 16:12:34 INFO  [http-nio-8080-exec-7]: Command 'registration' is started.
+2023-01-16 16:12:34 INFO  [http-nio-8080-exec-7]: Validation of user 'kefady2' is completed.
+2023-01-16 16:12:34 INFO  [http-nio-8080-exec-7]: Added new user in database.
+2023-01-16 16:12:34 INFO  [http-nio-8080-exec-7]: User 'kefady2' is successfully registered.
+2023-01-16 16:12:41 INFO  [http-nio-8080-exec-9]: New 'POST' request.
+2023-01-16 16:12:41 INFO  [http-nio-8080-exec-9]: Command 'login' is started.
+2023-01-16 16:12:41 INFO  [http-nio-8080-exec-9]: User 'kefady2' is successfully authorized.
+2023-01-16 16:12:41 INFO  [http-nio-8080-exec-10]: User 'kefady2' opened home page.
+2023-01-16 16:13:25 INFO  [http-nio-8080-exec-2]: New 'GET' request.
+2023-01-16 16:13:25 INFO  [http-nio-8080-exec-2]: Command 'apply' is started.
+2023-01-16 16:13:29 INFO  [http-nio-8080-exec-3]: New 'GET' request.
+2023-01-16 16:13:29 INFO  [http-nio-8080-exec-3]: Command 'profile' is started.
+2023-01-16 16:13:29 INFO  [http-nio-8080-exec-3]: User 'kefady2' opened profile.
+2023-01-16 16:13:30 INFO  [http-nio-8080-exec-5]: New 'POST' request.
+2023-01-16 16:13:30 INFO  [http-nio-8080-exec-5]: Command 'logout' is started.
+2023-01-16 16:13:30 INFO  [http-nio-8080-exec-5]: User 'kefady2' has been logout.
+2023-01-16 16:13:34 INFO  [http-nio-8080-exec-7]: New 'POST' request.
+2023-01-16 16:13:34 INFO  [http-nio-8080-exec-7]: Command 'login' is started.
+2023-01-16 16:13:34 INFO  [http-nio-8080-exec-7]: User 'kefady' is successfully authorized.
+2023-01-16 16:13:34 INFO  [http-nio-8080-exec-8]: User 'kefady' opened home page.
+2023-01-16 16:13:35 INFO  [http-nio-8080-exec-9]: New 'GET' request.
+2023-01-16 16:13:35 INFO  [http-nio-8080-exec-9]: Command 'console' is started.
+2023-01-16 16:13:36 INFO  [http-nio-8080-exec-9]: Admin user accessed console.
+2023-01-16 16:13:45 INFO  [http-nio-8080-exec-10]: New 'POST' request.
+2023-01-16 16:13:45 INFO  [http-nio-8080-exec-10]: Command 'update_department' is started.
+2023-01-16 16:13:45 INFO  [http-nio-8080-exec-10]: Validation of department 'Факультет інформатики та обчислювальної техніки' is completed.
+2023-01-16 16:13:45 ERROR [http-nio-8080-exec-10]: Error occurred while trying to update a department: Факультет інформатики та обчислювальної техніки
+2023-01-16 16:13:45 INFO  [http-nio-8080-exec-10]: Admin user accessed console.
+2023-01-16 16:13:53 INFO  [http-nio-8080-exec-1]: New 'POST' request.
+2023-01-16 16:13:53 INFO  [http-nio-8080-exec-1]: Command 'block_user' is started.
+2023-01-16 16:13:53 INFO  [http-nio-8080-exec-1]: User with id '2' blocked.
+2023-01-16 16:13:53 INFO  [http-nio-8080-exec-1]: Admin user accessed console.
+2023-01-16 16:14:00 INFO  [http-nio-8080-exec-2]: New 'POST' request.
+2023-01-16 16:14:00 INFO  [http-nio-8080-exec-2]: Command 'unblock_user' is started.
+2023-01-16 16:14:00 INFO  [http-nio-8080-exec-2]: Admin unblocked user with ID: 2
+2023-01-16 16:14:00 INFO  [http-nio-8080-exec-2]: Admin user accessed console.
+2023-01-16 16:14:13 INFO  [http-nio-8080-exec-3]: New 'POST' request.
+2023-01-16 16:14:13 INFO  [http-nio-8080-exec-3]: Command 'create_exam' is started.
+2023-01-16 16:14:13 INFO  [http-nio-8080-exec-3]: Added new exam in database.
+2023-01-16 16:14:13 INFO  [http-nio-8080-exec-3]: Exam created with name: Українська мова і література
+2023-01-16 16:14:13 INFO  [http-nio-8080-exec-3]: Admin user accessed console.
+2023-01-16 16:14:17 INFO  [http-nio-8080-exec-5]: New 'GET' request.
+2023-01-16 16:14:17 INFO  [http-nio-8080-exec-5]: Command 'profile' is started.
+2023-01-16 16:14:17 INFO  [http-nio-8080-exec-5]: User 'kefady' opened profile.
+2023-01-16 16:14:18 INFO  [http-nio-8080-exec-4]: New 'POST' request.
+2023-01-16 16:14:18 INFO  [http-nio-8080-exec-4]: Command 'logout' is started.
+2023-01-16 16:14:18 INFO  [http-nio-8080-exec-4]: User 'kefady' has been logout.

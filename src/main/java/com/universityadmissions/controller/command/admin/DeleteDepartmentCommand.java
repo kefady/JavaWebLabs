@@ -6,11 +6,11 @@ import com.universityadmissions.service.ServiceException;
 import com.universityadmissions.service.ServiceFactory;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 public class DeleteDepartmentCommand implements Command {
+    private static final Logger logger = Logger.getLogger(DeleteDepartmentCommand.class);
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) {
         try {
@@ -22,12 +22,14 @@ public class DeleteDepartmentCommand implements Command {
             isDepartmentDelete = departmentService.deleteDepartmentById(departmentId);
             if (!isDepartmentDelete) {
                 request.setAttribute("FAILED_DEPARTMENT_DELETE", "Не вдалося видалити факультет.");
+                logger.error("Error deleting department with id: " + departmentId);
+            } else {
+                logger.info("Department with id: " + departmentId + " has been deleted.");
             }
-
             ConsoleCommand consoleCommand = new ConsoleCommand();
             consoleCommand.execute(request, response);
         } catch (ServiceException e) {
-            Logger.getLogger(DeleteDepartmentCommand.class.getName()).log(Level.WARNING, "Failed to delete department.", e);
+            logger.error("Error deleting department: " + e);
         }
     }
 }

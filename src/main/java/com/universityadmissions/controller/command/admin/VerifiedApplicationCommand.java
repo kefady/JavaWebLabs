@@ -6,11 +6,11 @@ import com.universityadmissions.service.ServiceException;
 import com.universityadmissions.service.ServiceFactory;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 public class VerifiedApplicationCommand implements Command {
+    private static final Logger logger = Logger.getLogger(VerifiedApplicationCommand.class);
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) {
         try {
@@ -22,12 +22,15 @@ public class VerifiedApplicationCommand implements Command {
 
             if (!isVerifiedSet) {
                 request.setAttribute("APPLICATION_VERIFY_ERROR", "Не вдалося верифікувати заявку.");
+                logger.error("Failed to verify application with id: " + applicationId);
+            } else {
+                logger.info("Application with id: " + applicationId + " was verified successfully.");
             }
 
             ConsoleCommand consoleCommand = new ConsoleCommand();
             consoleCommand.execute(request, response);
         } catch (ServiceException e) {
-            Logger.getLogger(VerifiedApplicationCommand.class.getName()).log(Level.WARNING, "Failed to verified application.", e);
+            logger.error("Error while trying to verify application: " + e);
         }
     }
 }

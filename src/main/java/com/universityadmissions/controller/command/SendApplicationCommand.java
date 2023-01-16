@@ -1,23 +1,23 @@
 package com.universityadmissions.controller.command;
 
 import com.universityadmissions.controller.Command;
-import com.universityadmissions.dao.mysql.MysqlDaoFactory;
 import com.universityadmissions.entity.*;
 import com.universityadmissions.service.*;
 import com.universityadmissions.util.FormFinalGrade;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class SendApplicationCommand implements Command {
+    private static final Logger logger = Logger.getLogger(SendApplicationCommand.class);
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) {
         ApplicationService applicationService = ServiceFactory.getApplicationService();
@@ -85,6 +85,7 @@ public class SendApplicationCommand implements Command {
                         countOfUserApplications++;
                         request.getSession().setAttribute("countOfUserApplications", countOfUserApplications);
                         response.sendRedirect("/admission");
+                        logger.info("User '" + request.getSession().getAttribute("username") + "' send new application.");
                     } else {
                         for (HashMap.Entry<String, String> error : errors.entrySet()) {
                             request.setAttribute(error.getKey(), error.getValue());
@@ -92,13 +93,17 @@ public class SendApplicationCommand implements Command {
                         request.setAttribute("department", department);
                         request.setAttribute("examNames", examNameService.findAllExamNames());
                         request.getRequestDispatcher("apply").forward(request, response);
+                        logger.warn("Failed to send application by user '" + request.getSession().getAttribute("username") + "'. Wrong data.");
                     }
+                } else {
+                    logger.warn("User '" + request.getSession().getAttribute("username") + "' has already applied for department with id '" + departmentId + "', or has max applications.");
                 }
             } else {
+                logger.warn("Unauthorized user attempted to submit a apply form.");
                 response.sendRedirect("login");
             }
         } catch (IOException | ServiceException | ServletException e) {
-            Logger.getLogger(SendApplicationCommand.class.getName()).log(Level.WARNING, "Failed to send application.", e);
+            logger.error("Failed to send application.", e);
         }
     }
 
@@ -115,7 +120,7 @@ public class SendApplicationCommand implements Command {
                 result = true;
             }
         } catch (ServiceException e) {
-            Logger.getLogger(SendApplicationCommand.class.getName()).log(Level.WARNING, "Failed to add exam grade.", e);
+            logger.error("Failed to add exam grade. ExamGradeService not work.", e);
         }
         return result;
     }
@@ -133,7 +138,7 @@ public class SendApplicationCommand implements Command {
                 result = true;
             }
         } catch (ServiceException e) {
-            Logger.getLogger(SendApplicationCommand.class.getName()).log(Level.WARNING, "Failed to add certificate grade.", e);
+            logger.error("Failed to add certificate grade. CertificateGradeService not work.", e);
         }
         return result;
     }

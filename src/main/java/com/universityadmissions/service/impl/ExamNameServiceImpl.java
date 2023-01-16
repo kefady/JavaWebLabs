@@ -7,10 +7,12 @@ import com.universityadmissions.db.Databases;
 import com.universityadmissions.entity.ExamName;
 import com.universityadmissions.service.ExamNameService;
 import com.universityadmissions.service.ServiceException;
+import org.apache.log4j.Logger;
 
 import java.util.List;
 
 public class ExamNameServiceImpl implements ExamNameService {
+    private static final Logger logger = Logger.getLogger(ExamNameServiceImpl.class);
     private static volatile ExamNameServiceImpl instance;
     private final ExamNameDao dao;
 
@@ -34,6 +36,7 @@ public class ExamNameServiceImpl implements ExamNameService {
         try {
             return dao.findById(id);
         } catch (DaoException e) {
+            logger.error("Could not find exam.", e);
             throw new ServiceException("Could not find exam.", e);
         }
     }
@@ -43,6 +46,7 @@ public class ExamNameServiceImpl implements ExamNameService {
         try {
             return dao.findAll();
         } catch (DaoException e) {
+            logger.error("Failed to get list of exam names.", e);
             throw new ServiceException("Failed to get list of exam names.", e);
         }
     }

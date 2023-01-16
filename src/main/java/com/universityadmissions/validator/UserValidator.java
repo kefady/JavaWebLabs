@@ -1,6 +1,7 @@
 package com.universityadmissions.validator;
 
 import com.universityadmissions.entity.User;
+import org.apache.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,6 +10,7 @@ import java.util.regex.Pattern;
 public class UserValidator {
     private static final String NAME = "[а-яА-ЯіїєґІЇЄҐ'\\s]{2,}";
     private static final String CITY = "[а-яА-ЯіїєґІЇЄҐ'\\-\\s]{2,}";
+    private static final Logger logger = Logger.getLogger(UserValidator.class);
 
     private UserValidator() {
 
@@ -31,6 +33,7 @@ public class UserValidator {
         if (!Pattern.matches(CITY, user.getRegion())) {
             errors.put("INVALID_REGION", "Ви ввели некоректну область.");
         }
+        logger.info("Validation of user '" + user.getUsername() + "' is completed.");
         return errors;
     }
 }

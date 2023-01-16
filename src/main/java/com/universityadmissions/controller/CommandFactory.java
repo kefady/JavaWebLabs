@@ -1,11 +1,12 @@
 package com.universityadmissions.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.apache.log4j.Logger;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class CommandFactory {
+    private static final Logger logger = Logger.getLogger(CommandFactory.class);
+
     private CommandFactory() {
 
     }
@@ -17,7 +18,7 @@ public class CommandFactory {
             try {
                 command = CommandEnum.valueOf(action.toUpperCase()).getCommand();
             } catch (IllegalArgumentException e) {
-                Logger.getLogger(CommandFactory.class.getName()).log(Level.WARNING, "Command no found.", e);
+                logger.error("Command '" + action + "' not found.", e);
             }
         }
         return command;

@@ -7,10 +7,12 @@ import com.universityadmissions.db.Databases;
 import com.universityadmissions.entity.Exam;
 import com.universityadmissions.service.ExamService;
 import com.universityadmissions.service.ServiceException;
+import org.apache.log4j.Logger;
 
 import java.util.List;
 
 public class ExamServiceImpl implements ExamService {
+    private static final Logger logger = Logger.getLogger(ExamServiceImpl.class);
     private static volatile ExamServiceImpl instance;
     private final ExamDao dao;
 
@@ -34,6 +36,7 @@ public class ExamServiceImpl implements ExamService {
         try {
             return dao.findById(id);
         } catch (DaoException e) {
+            logger.error("Could not find exam.", e);
             throw new ServiceException("Could not find exam.", e);
         }
     }
@@ -41,8 +44,13 @@ public class ExamServiceImpl implements ExamService {
     @Override
     public boolean addNewExam(Exam exam) throws ServiceException {
         try {
-             return dao.create(exam);
+            boolean result = dao.create(exam);
+            if (result) {
+                logger.info("Added new exam in database.");
+            }
+            return result;
         } catch (DaoException e) {
+            logger.error("Failed to create new exam.", e);
             throw new ServiceException("Failed to create new exam.", e);
         }
     }
@@ -52,6 +60,7 @@ public class ExamServiceImpl implements ExamService {
         try {
             return dao.findAll();
         } catch (DaoException e) {
+            logger.error("Failed to get list of exams.", e);
             throw new ServiceException("Failed to get list of exams.", e);
         }
     }

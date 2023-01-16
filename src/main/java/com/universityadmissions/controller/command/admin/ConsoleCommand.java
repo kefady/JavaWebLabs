@@ -1,20 +1,20 @@
 package com.universityadmissions.controller.command.admin;
 
 import com.universityadmissions.controller.Command;
-import com.universityadmissions.controller.command.RegistrationCommand;
 import com.universityadmissions.entity.*;
 import com.universityadmissions.service.*;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class ConsoleCommand implements Command {
+    private static final Logger logger = Logger.getLogger(ConsoleCommand.class);
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) {
         try {
@@ -35,11 +35,12 @@ public class ConsoleCommand implements Command {
                 request.setAttribute("examNames", examNames);
                 request.setAttribute("users", users);
                 request.getRequestDispatcher("console").forward(request, response);
+                logger.info("Admin user accessed console.");
             } else {
                 response.sendRedirect("login");
             }
         } catch (ServiceException | ServletException | IOException e) {
-            Logger.getLogger(ConsoleCommand.class.getName()).log(Level.WARNING, "Failed to open console.", e);
+            logger.error("Error displaying console: " + e);
         }
     }
 }
